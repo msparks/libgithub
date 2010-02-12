@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>libgithub demo</title>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/humane.js"></script>
+  <script type="text/javascript" src="js/date.js"></script>
+  <script type="text/javascript" src="js/md5.js"></script>
+  <script type="text/javascript" src="libgithub.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="css/libgithub.css" />
+</head>
+<body>
+  <script type="text/javascript">
+  $(window).load(function () {
+    var b = new libgithub.Badge('msparks', 'alphasign', 'master');
+    b.targetIs('#commit');
+
+    var c = new libgithub.Badge('msparks', 'svcshare');
+    c.numCommitsIs(3);
+    c.targetIs('#commits');
+  });
+  </script>
+
+  <div id="commit"></div>
+  <hr />
+  <div id="commits"></div>
+</body>
+</html>

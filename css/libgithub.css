@@ -1,0 +1,119 @@
+div.libgithub-badge-outline {
+  font-family: Arial, sans-serif;
+  font-size: 101%;
+  width: 600px;
+  overflow: auto;
+  margin: 8px;
+  padding: 5px;
+  padding-top: 0px;
+  color: #444;
+
+  border: 2px solid #ccc;
+  background-color: #f0f0f0;
+  -moz-border-radius: 14px;
+  -khtml-border-radius: 14px;
+  border-radius: 14px;
+}
+
+div.libgithub-badge-username {
+  border: 0px;
+  margin: 0px;
+  margin-top: 2px;
+  padding-left: 18px;
+  font-weight: bold;
+  background-image: url(../img/public.png);
+  background-repeat: no-repeat;
+  background-position: 0px 1px;
+}
+
+div.libgithub-badge-diffline {
+  font-weight: bold;
+}
+
+div.libgithub-badge-commitmessage {
+  font-style: italic;
+  font-family: Trebuchet MS, Arial, sans-serif;
+  padding-left: 90px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-image: url(../img/commit.png);
+  background-repeat: no-repeat;
+  background-position: 70px 0px;
+}
+
+div.libgithub-badge-diffstat {
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+a.libgithub-badge-commitid,
+a.libgithub-badge-commitid:visited,
+a.libgithub-badge-commitid:link,
+a.libgithub-badge-commitid:active {
+  color: #88c22c;
+  text-decoration: none;
+}
+
+a.libgithub-badge-commitid: hover {
+  text-decoration: underline;
+}
+
+a.libgithub-badge-username,
+a.libgithub-badge-username:visited,
+a.libgithub-badge-username:link a.libgithub-badge-username:active {
+  color: #88c22c;
+  text-decoration: underline;
+  font-size: 1.1em;
+}
+
+a.libgithub-badge-username: hover {
+  text-decoration: none;
+}
+
+span.libgithub-badge-text, span.libgithub-badge-text-date {
+}
+
+span.libgithub-badge-diffadded {
+  color: green;
+  background-color: transparent;
+}
+
+span.libgithub-badge-diffremoved {
+  color: red;
+  background-color: transparent;
+}
+
+span.libgithub-badge-diffmodified {
+  color: purple;
+  background-color: transparent;
+}
+
+img.libgithub-badge-gravatar {
+  border: 1px solid #fff6a9;
+  margin: 5px;
+  float: left;
+  margin: 2px;
+}
+
+div.libgithub-badge-filelist {
+  margin-top: 10px;
+}
+
+div.libgithub-badge-filelist ul {
+  list-style-type: square;
+  list-style-position: inside;
+  margin: 0px;
+}
+
+a.libgithub-badge-showMoreLink,
+a.libgithub-badge-showMoreLink:visited,
+a.libgithub-badge-showMoreLink:link a.libgithub-badge-showMoreLink:active {
+  color: #88c22c;
+  text-decoration: underline;
+  font-size: 0.8em;
+  padding-left: 1em;
+}
+
+a.libgithub-badge-showMoreLink: hover {
+  text-decoration: none;
+}
