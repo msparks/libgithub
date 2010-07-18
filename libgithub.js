@@ -85,9 +85,9 @@ libgithub.Badge.prototype._commitMessage = function (commit)
 
 libgithub.Badge.prototype._diffStat = function (commit, fileList)
 {
-  var numAdded = commit.added.length;
-  var numRemoved = commit.removed.length;
-  var numModified = commit.modified.length;
+  var numAdded = ('added' in commit) ? commit.added.length : 0;
+  var numRemoved = ('removed' in commit) ? commit.removed.length : 0;
+  var numModified = ('modified' in commit) ? commit.modified.length : 0;
 
   var diffStat = _ce('div', {'class': 'libgithub-badge-diffstat'});
   var addedElement = _ce('span', {'class': 'libgithub-badge-diffadded'});
@@ -134,12 +134,16 @@ libgithub.Badge.prototype._diffStat = function (commit, fileList)
 
 libgithub.Badge.prototype._fileList = function (commit)
 {
+  var filesAdded = ('added' in commit) ? commit.added : [];
+  var filesRemoved = ('removed' in commit) ? commit.removed : [];
+  var filesModified = ('modified' in commit) ? commit.modified : [];
+
   var fileList = _ce('div',
     {'class': 'libgithub-badge-filelist',
      'id': this._username + this._repo});
-  var words = {'added': ['Added', commit.added],
-               'removed': ['Removed', commit.removed],
-               'modified': ['Modified', commit.modified]};
+  var words = {'added': ['Added', filesAdded],
+               'removed': ['Removed', filesRemoved],
+               'modified': ['Modified', filesModified]};
 
   for (word in words) {
     var container = _ce('div');
