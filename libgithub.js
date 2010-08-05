@@ -158,7 +158,10 @@ libgithub.Badge.prototype._fileList = function (commit)
 
     $.each(fset, function(j, f) {
       var file = _ce('li');
-      $(file).append(_tn(f.filename));
+      if (word == 'modified')
+        $(file).append(_tn(f.filename));
+      else
+        $(file).append(_tn(f));
       $(ulist).append(file);
       i++;
     });
