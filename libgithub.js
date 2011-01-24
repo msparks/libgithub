@@ -54,7 +54,7 @@ libgithub.Badge.prototype._diffLine = function (commit)
   $(diffLine).append(image);
 
   var link = _ce('a',
-    {'href': commit.url,
+    {'href': 'http://github.com' + commit.url,
      'target': '_blank',
      'class': 'libgithub-badge-commitid'});
   $(link).append(_tn(' ' + _truncate(commit.id, 10, '')));
