@@ -117,3 +117,33 @@ a.libgithub-badge-showMoreLink:link a.libgithub-badge-showMoreLink:active {
 a.libgithub-badge-showMoreLink: hover {
   text-decoration: none;
 }
+
+
+div.libgithub-activity-line: {
+}
+
+img.libgithub-activity-gravatar {
+  border: 1px solid #666666;
+  float: left;
+  margin: 2px;
+  margin-right: 5px;
+}
+
+a.libgithub-activity-username,
+a.libgithub-activity-username:visited,
+a.libgithub-activity-username:link,
+a.libgithub-activity-username:active {
+  color: #88c22c;
+  text-decoration: none;
+}
+
+a.libgithub-activity-commitid,
+a.libgithub-activity-commitid:visited,
+a.libgithub-activity-commitid:link,
+a.libgithub-activity-commitid:active {
+  color: #88c22c;
+  text-decoration: none;
+}
+
+span.libgithub-activity-date {
+}

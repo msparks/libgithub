@@ -19,11 +19,16 @@
     var c = new libgithub.Badge('msparks', 'svcshare');
     c.numCommitsIs(3);
     c.targetIs('#commits');
+
+    var al = new libgithub.ActivityLine('msparks', 'libgithub');
+    al.targetIs('#last_activity');
   });
   </script>
 
   <div id="commit"></div>
   <hr />
   <div id="commits"></div>
+  <hr />
+  <div id="last_activity"></div>
 </body>
 </html>
