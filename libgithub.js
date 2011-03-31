@@ -31,7 +31,7 @@ libgithub.Badge.prototype._userRepo = function (commit)
 {
   var userRepo = _ce('div', {'class': 'libgithub-badge-username'});
   var link = _ce('a',
-    {'href': 'http://github.com/' + this._username + '/' + this._repo,
+    {'href': 'https://github.com/' + this._username + '/' + this._repo,
      'target': '_blank',
      'class': 'libgithub-badge-username'});
 
@@ -54,7 +54,7 @@ libgithub.Badge.prototype._diffLine = function (commit)
   $(diffLine).append(image);
 
   var link = _ce('a',
-    {'href': 'http://github.com' + commit.url,
+    {'href': 'https://github.com' + commit.url,
      'target': '_blank',
      'class': 'libgithub-badge-commitid'});
   $(link).append(_tn(' ' + _truncate(commit.id, 10, '')));
@@ -212,7 +212,7 @@ libgithub.Badge.prototype._callback = function (data, element)
 
 libgithub.Badge.prototype._showCommit = function (commitId, element)
 {
-  var _url = 'http://github.com/api/v2/json/commits/show/' +
+  var _url = 'https://github.com/api/v2/json/commits/show/' +
               this._username + '/' + this._repo + '/' + commitId +
              '?callback=?';
   var _this = this;
@@ -223,7 +223,7 @@ libgithub.Badge.prototype._showCommit = function (commitId, element)
 
 libgithub.Badge.prototype._showCommits = function (branch, element)
 {
-  var _url = 'http://github.com/api/v2/json/commits/list/' +
+  var _url = 'https://github.com/api/v2/json/commits/list/' +
              this._username + '/' + this._repo + '/' + branch +
              '?callback=?';
   var _this = this;
@@ -276,7 +276,7 @@ libgithub.ActivityLine.prototype.targetIs = function (selector)
 
 libgithub.ActivityLine.prototype._showCommit = function (commitId, element)
 {
-  var _url = 'http://github.com/api/v2/json/commits/show/' +
+  var _url = 'https://github.com/api/v2/json/commits/show/' +
               this._username + '/' + this._repo + '/' + commitId +
              '?callback=?';
   var _this = this;
