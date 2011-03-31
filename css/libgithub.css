@@ -120,6 +120,7 @@ a.libgithub-badge-showMoreLink: hover {
 
 
 div.libgithub-activity-line: {
+  display: inline;
 }
 
 img.libgithub-activity-gravatar {
