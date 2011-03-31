@@ -19,12 +19,12 @@ libgithub.Badge = function (username, repo, commitId)
 
   this.gravatarSize = function () { return this._gravatarSize; };
   this.gravatarSizeIs = function (size) { this._gravatarSize = size; };
-  this.startHidden = function () { return this._startHidden; }
+  this.startHidden = function () { return this._startHidden; };
   this.startHiddenIs = function (setting) { this._startHidden = setting; };
   this.numCommits = function () { return this._numCommits; };
   this.numCommitsIs = function (numCommits) { this._numCommits = numCommits; };
   this.target = function () { return this._target; };
-}
+};
 
 
 libgithub.Badge.prototype._userRepo = function (commit)
@@ -39,7 +39,7 @@ libgithub.Badge.prototype._userRepo = function (commit)
   $(userRepo).append(link);
 
   return userRepo;
-}
+};
 
 
 libgithub.Badge.prototype._diffLine = function (commit)
@@ -70,7 +70,7 @@ libgithub.Badge.prototype._diffLine = function (commit)
   $(diffLine).append(commitDate);
 
   return diffLine;
-}
+};
 
 
 libgithub.Badge.prototype._commitMessage = function (commit)
@@ -80,7 +80,7 @@ libgithub.Badge.prototype._commitMessage = function (commit)
   $(commitMessage).append(_tn('"' + _truncate(commit.message, 100) + '"'));
 
   return commitMessage;
-}
+};
 
 
 libgithub.Badge.prototype._diffStat = function (commit, fileList)
@@ -129,7 +129,7 @@ libgithub.Badge.prototype._diffStat = function (commit, fileList)
   }
 
   return diffStat;
-}
+};
 
 
 libgithub.Badge.prototype._fileList = function (commit)
@@ -171,7 +171,7 @@ libgithub.Badge.prototype._fileList = function (commit)
   }
 
   return fileList;
-}
+};
 
 
 libgithub.Badge.prototype._badgeStructure = function (commit)
@@ -196,7 +196,7 @@ libgithub.Badge.prototype._badgeStructure = function (commit)
   };
 
   return badgeDiv;
-}
+};
 
 
 libgithub.Badge.prototype._callback = function (data, element)
@@ -207,7 +207,7 @@ libgithub.Badge.prototype._callback = function (data, element)
     if (this._startHidden)
       badgeDiv.hideFiles();
   }
-}
+};
 
 
 libgithub.Badge.prototype._showCommit = function (commitId, element)
@@ -218,7 +218,7 @@ libgithub.Badge.prototype._showCommit = function (commitId, element)
   var _this = this;
 
   $.getJSON(_url, function (data) { _this._callback(data, element); });
-}
+};
 
 
 libgithub.Badge.prototype._showCommits = function (branch, element)
@@ -233,7 +233,7 @@ libgithub.Badge.prototype._showCommits = function (branch, element)
     for (var i = 0; i < maxLength; ++i)
       _this._showCommit(data.commits[i].id, element);
   });
-}
+};
 
 
 libgithub.Badge.prototype.targetIs = function (selector)
@@ -245,7 +245,7 @@ libgithub.Badge.prototype.targetIs = function (selector)
     this._showCommits(this._commitId, _element);
   else
     this._showCommit(this._commitId, _element);
-}
+};
 
 
 /** utility functions **/
@@ -299,13 +299,13 @@ var _niceTime = function (dateTime)
  */
 var _ce = function (tagName, attributes)
 {
-  var e = document.createElement(tagName)
+  var e = document.createElement(tagName);
   for (attr in attributes) {
     var value = attributes[attr];
     e.setAttribute(attr, value);
   }
   return e;
-}
+};
 
 
 /**
@@ -320,4 +320,4 @@ var _ce = function (tagName, attributes)
 var _tn = function (text)
 {
   return document.createTextNode(text);
-}
+};
