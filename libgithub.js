@@ -47,8 +47,7 @@ libgithub.Badge.prototype._diffLine = function (commit)
   var diffLine = _ce('div', {'class': 'libgithub-badge-diffline'});
 
   var image = _ce('img',
-    {'src': 'http://www.gravatar.com/avatar/' +
-            hex_md5(commit.committer.email) + '?s=' + this._gravatarSize,
+    {'src': _gravatarImageURL(commit.committer.email, this._gravatarSize),
      'class': 'libgithub-badge-gravatar',
      'alt': this._username});
   $(diffLine).append(image);
@@ -301,11 +300,11 @@ libgithub.ActivityLine.prototype._activityLineStructure = function (commit)
   var lineDiv = _ce('div', {'class': 'libgithub-activity-line'});
 
   if (this._gravatarSize > 0) {
-    var image = _ce('img',
-                    {'src': 'http://www.gravatar.com/avatar/' +
-                     hex_md5(commit.committer.email) + '?s=' + this._gravatarSize,
-                     'class': 'libgithub-activity-gravatar',
-                     'alt': this._username});
+    var image = _ce(
+      'img',
+      {'src': _gravatarImageURL(commit.committer.email, this._gravatarSize),
+       'class': 'libgithub-activity-gravatar',
+       'alt': this._username});
     $(lineDiv).append(image);
   }
 
@@ -408,4 +407,20 @@ var _ce = function (tagName, attributes)
 var _tn = function (text)
 {
   return document.createTextNode(text);
+};
+
+
+/**
+ * Generate a Gravatar image URL.
+ *
+ * Args:
+ *   email: email address
+ *   size: size in pixels
+ *
+ * Returns:
+ *   image URL
+ */
+var _gravatarImageURL = function (email, size)
+{
+  return 'http://www.gravatar.com/avatar/' + hex_md5(email) + '?s=' + size;
 };
