@@ -257,9 +257,12 @@ libgithub.ActivityLine = function (username, repo, commitId)
   this._commitId = (typeof(commitId) == 'undefined') ? 'master' : commitId;
   this._gravatarSize = 32;
   this._target = null;
+  this._repoLink = null;
 
   this.gravatarSize = function () { return this._gravatarSize; };
   this.gravatarSizeIs = function (size) { this._gravatarSize = size; };
+  this.repoLink = function () { return this._repoLink; };
+  this.repoLinkIs = function (link) { this._repoLink = link; };
   this.target = function () { return this._target; };
 };
 
@@ -306,6 +309,26 @@ libgithub.ActivityLine.prototype._activityLineStructure = function (commit)
        'class': 'libgithub-activity-gravatar',
        'alt': this._username});
     $(lineDiv).append(image);
+  }
+
+  if (this._repoLink) {
+    var repoUrl = 'github.com/' + username + '/' + repo;
+    var repoLink = _ce('a', {
+      'href': 'https://' + repoUrl,
+      'target': '_blank',
+      'class': 'libgithub-activity-repository'
+    });
+
+   $(repoLink).append(_tn(repoUrl));
+
+    // if function, allow client to transform repo link
+   if (typeof this._repoLink == 'function') {
+     repoLink = $(this._repoLink(repoLink));
+   } else { // else add a colon and space
+     repoLink = $('<span>').append(repoLink).append(': ');
+   }
+
+   $(lineDiv).append(repoLink);
   }
 
   var login = commit.committer.login;
