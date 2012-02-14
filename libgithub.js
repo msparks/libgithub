@@ -319,16 +319,17 @@ libgithub.ActivityLine.prototype._activityLineStructure = function (commit)
       'class': 'libgithub-activity-repository'
     });
 
-   $(repoLink).append(_tn(repoUrl));
+    $(repoLink).append(_tn(repoUrl));
 
-    // if function, allow client to transform repo link
-   if (typeof this._repoLink == 'function') {
-     repoLink = $(this._repoLink(repoLink));
-   } else { // else add a colon and space
-     repoLink = $('<span>').append(repoLink).append(': ');
-   }
+    // If _repoLink is a function, allow the client to transform repoLink.
+    if (typeof this._repoLink == 'function') {
+      repoLink = $(this._repoLink(repoLink));
+    } else {  // Else, add a colon and space.
+      var span = $(_ce('span', {'class': 'libgithub-activity-repolink'}));
+      repoLink = span.append(repoLink).append(': ');
+    }
 
-   $(lineDiv).append(repoLink);
+    $(lineDiv).append(repoLink);
   }
 
   var login = commit.committer.login;
