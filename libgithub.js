@@ -14,15 +14,12 @@ libgithub.Badge = function (username, repo, commitId)
   this._commitId = (typeof(commitId) == 'undefined') ? 'master' : commitId;
   this._gravatarSize = 60;
   this._startHidden = true;
-  this._numCommits = 1;
   this._target = null;
 
   this.gravatarSize = function () { return this._gravatarSize; };
   this.gravatarSizeIs = function (size) { this._gravatarSize = size; };
   this.startHidden = function () { return this._startHidden; };
   this.startHiddenIs = function (setting) { this._startHidden = setting; };
-  this.numCommits = function () { return this._numCommits; };
-  this.numCommitsIs = function (numCommits) { this._numCommits = numCommits; };
   this.target = function () { return this._target; };
 };
 
@@ -44,22 +41,25 @@ libgithub.Badge.prototype._userRepo = function (commit)
 
 libgithub.Badge.prototype._diffLine = function (commit)
 {
-  var diffLine = _ce('div', {'class': 'libgithub-badge-diffline'});
+  var author = commit.name();
+  var image_url = _gravatarImageURL(commit.email(), this._gravatarSize);
 
+  var diffLine = _ce('div', {'class': 'libgithub-badge-diffline'});
   var image = _ce('img',
-    {'src': _gravatarImageURL(commit.committer.email, this._gravatarSize),
+    {'src': image_url,
      'class': 'libgithub-badge-gravatar',
      'alt': this._username});
   $(diffLine).append(image);
 
   var link = _ce('a',
-    {'href': 'https://github.com' + commit.url,
+    {'href': ('https://github.com/' + this._username + '/' + this._repo +
+              '/commit/' + commit.sha()),
      'target': '_blank',
      'class': 'libgithub-badge-commitid'});
-  $(link).append(_tn(' ' + _truncate(commit.id, 10, '')));
-  $(diffLine).append(_tn(commit.committer.name + ' committed '));
+  $(link).append(_tn(' ' + _truncate(commit.sha(), 10, '')));
+  $(diffLine).append(_tn(author + ' committed '));
 
-  var niceTime = _niceTime(commit.committed_date);
+  var niceTime = _niceTime(commit.date());
   var commitDate = _ce('span',
     {'class': 'libgithub-badge-text-date'});
   $(commitDate).append(_tn(niceTime));
@@ -76,7 +76,8 @@ libgithub.Badge.prototype._commitMessage = function (commit)
 {
   var commitMessage = _ce('div',
     {'class': 'libgithub-badge-commitmessage'});
-  $(commitMessage).append(_tn('"' + _truncate(commit.message, 100) + '"'));
+  $(commitMessage).append(
+    _tn('"' + _truncate(commit.message(), 100) + '"'));
 
   return commitMessage;
 };
@@ -84,27 +85,30 @@ libgithub.Badge.prototype._commitMessage = function (commit)
 
 libgithub.Badge.prototype._diffStat = function (commit, fileList)
 {
-  var numAdded = ('added' in commit) ? commit.added.length : 0;
-  var numRemoved = ('removed' in commit) ? commit.removed.length : 0;
-  var numModified = ('modified' in commit) ? commit.modified.length : 0;
+  var numAdded = 0;
+  var numRemoved = 0;
+  var files = commit.files();
+  for (var i in files) {
+    var file = files[i];
+    numAdded += file.additions();
+    numRemoved += file.deletions();
+  }
 
   var diffStat = _ce('div', {'class': 'libgithub-badge-diffstat'});
   var addedElement = _ce('span', {'class': 'libgithub-badge-diffadded'});
   var removedElement = _ce('span', {'class': 'libgithub-badge-diffremoved'});
-  var modifiedElement = _ce('span', {'class': 'libgithub-badge-diffmodified'});
 
   $(diffStat).append(_tn('('));
   $(diffStat).append(_tn(numAdded));
-  $(diffStat).append($(addedElement).text(' added'));
+  $(diffStat).append($(addedElement).text(
+      numAdded == 1 ? ' line added' : ' lines added'));
   $(diffStat).append(_tn(', '));
   $(diffStat).append(_tn(numRemoved));
-  $(diffStat).append($(removedElement).text(' removed'));
-  $(diffStat).append(_tn(', '));
-  $(diffStat).append(_tn(numModified));
-  $(diffStat).append($(modifiedElement).text(' modified'));
+  $(diffStat).append($(removedElement).text(
+      numRemoved == 1 ? ' line deleted' : ' lines deleted'));
   $(diffStat).append(_tn(')'));
 
-  if (numAdded + numRemoved + numModified > 0) {
+  if (numAdded + numRemoved > 0) {
     var username = this._username;
     var repo = this._repo;
     var showFilesLink = _ce('a',
@@ -133,9 +137,19 @@ libgithub.Badge.prototype._diffStat = function (commit, fileList)
 
 libgithub.Badge.prototype._fileList = function (commit)
 {
-  var filesAdded = ('added' in commit) ? commit.added : [];
-  var filesRemoved = ('removed' in commit) ? commit.removed : [];
-  var filesModified = ('modified' in commit) ? commit.modified : [];
+  var files = commit.files();
+  var filesAdded = [];
+  var filesRemoved = [];
+  var filesModified = [];
+  for (var i in files) {
+    var file = files[i];
+    if (file.status() == 'added')
+      filesAdded.push(file);
+    else if (file.status() == 'removed')
+      filesRemoved.push(file);
+    else if (file.status() == 'modified')
+      filesModified.push(file);
+  }
 
   var fileList = _ce('div',
     {'class': 'libgithub-badge-filelist',
@@ -144,7 +158,7 @@ libgithub.Badge.prototype._fileList = function (commit)
                'removed': ['Removed', filesRemoved],
                'modified': ['Modified', filesModified]};
 
-  for (word in words) {
+  for (var word in words) {
     var container = _ce('div');
     var ulist = _ce('ul');
     var cName = 'libgithub-badge-diff' + word;
@@ -158,9 +172,9 @@ libgithub.Badge.prototype._fileList = function (commit)
     $.each(fset, function(j, f) {
       var file = _ce('li');
       if (word == 'modified')
-        $(file).append(_tn(f.filename));
+        $(file).append(_tn(f.filename()));
       else
-        $(file).append(_tn(f));
+        $(file).append(_tn(f.filename()));
       $(ulist).append(file);
       i++;
     });
@@ -178,6 +192,7 @@ libgithub.Badge.prototype._badgeStructure = function (commit)
   var username = this._username;
   var repo = this._repo;
   var badgeDiv = _ce('div', {'class': 'libgithub-badge-outline'});
+
   var userRepo = this._userRepo(commit);
   var diffLine = this._diffLine(commit);
   var commitMessage = this._commitMessage(commit);
@@ -198,21 +213,10 @@ libgithub.Badge.prototype._badgeStructure = function (commit)
 };
 
 
-libgithub.Badge.prototype._callback = function (data, element)
-{
-  if ('commit' in data) {
-    var badgeDiv = this._badgeStructure(data.commit);
-    element.append(badgeDiv);
-    if (this._startHidden)
-      badgeDiv.hideFiles();
-  }
-};
-
-
 libgithub.Badge.prototype._showCommit = function (commitId, element)
 {
-  var _url = 'https://github.com/api/v2/json/commits/show/' +
-              this._username + '/' + this._repo + '/' + commitId +
+  var _url = 'https://api.github.com/repos/' +
+             this._username + '/' + this._repo + '/commits/' + commitId +
              '?callback=?';
   var _this = this;
 
@@ -220,18 +224,14 @@ libgithub.Badge.prototype._showCommit = function (commitId, element)
 };
 
 
-libgithub.Badge.prototype._showCommits = function (branch, element)
+libgithub.Badge.prototype._callback = function (data, element)
 {
-  var _url = 'https://github.com/api/v2/json/commits/list/' +
-             this._username + '/' + this._repo + '/' + branch +
-             '?callback=?';
-  var _this = this;
-
-  $.getJSON(_url, function (data) {
-    var maxLength = Math.min(_this._numCommits, data.commits.length);
-    for (var i = 0; i < maxLength; ++i)
-      _this._showCommit(data.commits[i].id, element);
-  });
+  var commit = new libgithub._Commit;
+  commit.Init(data.data);
+  var badgeDiv = this._badgeStructure(commit);
+  element.append(badgeDiv);
+  if (this._startHidden)
+    badgeDiv.hideFiles();
 };
 
 
@@ -239,11 +239,7 @@ libgithub.Badge.prototype.targetIs = function (selector)
 {
   this._target = selector;
   var _element = $(selector);
-
-  if (this._numCommits > 1)
-    this._showCommits(this._commitId, _element);
-  else
-    this._showCommit(this._commitId, _element);
+  this._showCommit(this._commitId, _element);
 };
 
 
@@ -278,8 +274,8 @@ libgithub.ActivityLine.prototype.targetIs = function (selector)
 
 libgithub.ActivityLine.prototype._showCommit = function (commitId, element)
 {
-  var _url = 'https://github.com/api/v2/json/commits/show/' +
-              this._username + '/' + this._repo + '/' + commitId +
+  var _url = 'https://api.github.com/repos/' +
+             this._username + '/' + this._repo + '/commits/' + commitId +
              '?callback=?';
   var _this = this;
 
@@ -289,10 +285,10 @@ libgithub.ActivityLine.prototype._showCommit = function (commitId, element)
 
 libgithub.ActivityLine.prototype._callback = function (data, element)
 {
-  if ('commit' in data) {
-    var lineDiv = this._activityLineStructure(data.commit);
-    element.append(lineDiv);
-  }
+  var commit = new libgithub._Commit;
+  commit.Init(data.data);
+  var lineDiv = this._activityLineStructure(commit);
+  element.append(lineDiv);
 };
 
 
@@ -305,7 +301,7 @@ libgithub.ActivityLine.prototype._activityLineStructure = function (commit)
   if (this._gravatarSize > 0) {
     var image = _ce(
       'img',
-      {'src': _gravatarImageURL(commit.committer.email, this._gravatarSize),
+      {'src': _gravatarImageURL(commit.email(), this._gravatarSize),
        'class': 'libgithub-activity-gravatar',
        'alt': this._username});
     $(lineDiv).append(image);
@@ -332,19 +328,20 @@ libgithub.ActivityLine.prototype._activityLineStructure = function (commit)
     $(lineDiv).append(repoLink);
   }
 
-  var login = commit.committer.login;
+  var login = this._username;
   var loginLink = _ce('a', {'href': 'https://github.com/' + login,
                             'target': '_blank',
                             'class': 'libgithub-activity-username'});
   $(loginLink).append(_tn(login));
 
   var link = _ce('a',
-    {'href': 'https://github.com' + commit.url,
+    {'href': ('https://github.com/' + this._username + '/' + this._repo +
+              '/commit/' + commit.sha()),
      'target': '_blank',
      'class': 'libgithub-activity-commitid'});
-  $(link).append(_tn(' ' + _truncate(commit.id, 10, '')));
+  $(link).append(_tn(' ' + _truncate(commit.sha(), 10, '')));
 
-  var niceTime = _niceTime(commit.committed_date);
+  var niceTime = _niceTime(commit.date());
   var commitDate = _ce('span',
     {'class': 'libgithub-activity-date'});
   $(commitDate).append(_tn(niceTime));
@@ -358,6 +355,76 @@ libgithub.ActivityLine.prototype._activityLineStructure = function (commit)
   return lineDiv;
 };
 
+
+/**
+ * Internal representation of a git commit on GitHub.
+ */
+libgithub._Commit = function (data)
+{
+  // Commit information.
+  this._name = undefined;
+  this._date = undefined;
+  this._email = undefined;
+  this._sha = undefined;
+  this._message = undefined;
+
+  // Content of the commit.
+  this._files = undefined;     // List of _ChangedFile objects.
+
+  this.name = function() { return this._name; };
+  this.date = function() { return this._date; };
+  this.email = function() { return this._email; };
+  this.sha = function() { return this._sha; };
+  this.message = function() { return this._message; };
+
+  this.files = function() { return this._files; };
+};
+
+
+/**
+ * Initializes the data in this Commit object from GitHub API data.
+ *
+ * @param {Object} data Data from 'commits' call to GitHub API v3.
+ */
+libgithub._Commit.prototype.Init = function (data)
+{
+  this._name =
+    (data.committer != null) ? data.committer.login :
+    data.commit.committer.name;
+  this._date = data.commit.committer.date;
+  this._email = data.commit.author.email;
+  this._sha = data.sha;
+  this._message = data.commit.message;
+
+  this._files = [];
+  for (var i in data.files) {
+    var changedFile = new libgithub._ChangedFile(data.files[i]);
+    this._files.push(changedFile);
+  }
+};
+
+
+libgithub._ChangedFile = function (file_data) {
+  this._filename = undefined;
+  this._status = undefined;
+  this._deletions = undefined;
+  this._additions = undefined;
+
+  this.filename = function() { return this._filename; };
+  this.status = function() { return this._status; };
+  this.deletions = function() { return this._deletions; };
+  this.additions = function() { return this._additions; };
+
+  this.Init(file_data);
+};
+
+
+libgithub._ChangedFile.prototype.Init = function (file_data) {
+  this._filename = file_data.filename;
+  this._status = file_data.status;
+  this._deletions = file_data.deletions;
+  this._additions = file_data.additions;
+};
 
 /** utility functions **/
 

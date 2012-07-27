@@ -13,21 +13,20 @@
 <body>
   <script type="text/javascript">
   $(window).load(function () {
-    var b = new libgithub.Badge('msparks', 'alphasign', 'master');
-    b.targetIs('#commit');
+    var a = new libgithub.Badge('msparks', 'irssi', 'master');
+    a.targetIs('#commit-irssi');
 
-    var c = new libgithub.Badge('msparks', 'svcshare');
-    c.numCommitsIs(3);
-    c.targetIs('#commits');
+    var b = new libgithub.Badge('msparks', 'alphasign', 'master');
+    b.targetIs('#commit-alphasign');
 
     var al = new libgithub.ActivityLine('msparks', 'libgithub');
     al.targetIs('#last_activity');
   });
   </script>
 
-  <div id="commit"></div>
+  <div id="commit-irssi"></div>
   <hr />
-  <div id="commits"></div>
+  <div id="commit-alphasign"></div>
   <hr />
   <div id="last_activity"></div>
 </body>
