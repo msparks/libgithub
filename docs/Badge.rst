@@ -37,16 +37,6 @@ Reference
 
     :param setting: new setting. True = hide file list, False = show file list
 
-  .. method:: numCommits()
-
-    Get the number of commits listed at badge creation. Defaults to 1.
-
-  .. method:: numCommitsIs(numCommits)
-
-    Set number of commits shown when badge is created.
-
-    :param numCommits: number of commits to show
-
   .. method:: target()
 
     Get the current target.
