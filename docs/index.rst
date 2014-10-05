@@ -8,10 +8,9 @@ Currently libgithub only generates 'badges', which look something like this:
 
 .. image:: libgithub-badges.png
 
-libgithub is available from `quadpoint.org
-<http://quadpoint.org/projects/libgithub>`_ as a single JavaScript file. A
-'minified' version of the library is available as well. CSS styles are also
-included with the distribution and can be customized.
+libgithub is available from `GitHub <https://github.com/msparks/libgithub>`_ as
+a single JavaScript file. A 'minified' version of the library is available as
+well. CSS styles are also included with the distribution and can be customized.
 
 
 Requirements and Installation
